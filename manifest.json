@@ -1,7 +1,7 @@
 {
   "name": "Dashboard App",
   "short_name": "Dashboard",
-  "start_url": "/",
+  "start_url": "/rbleon-app/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
