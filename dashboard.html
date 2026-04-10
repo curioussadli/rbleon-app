@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+  />
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="phone-shell">
+    <section class="app-screen">
+
+
+
+      <!-- Dashboard Content -->
+      <section class="dashboard-main">
+
+        <!-- Header -->
+        <div class="dashboard-page">
+
+          <!-- TOP NAVBAR -->
+          <div class="topbar">
+            <button class="topbar-btn">
+              <img src="assets/icons/icon-back.svg" alt="Back">
+            </button>
+
+            <h2 class="topbar-title">Saldo</h2>
+
+            <button class="topbar-btn">
+              <img src="assets/icons/icon-more.svg" alt="Menu">
+            </button>
+          </div>
+
+
+          <!-- HEADER INFO (HARUS DI SINI) -->
+          <div class="dashboard-header">
+            <p id="petugasInfo">Grup • Petugas</p>
+          </div>
+
+        </div>
+
+        <!-- Toggle -->
+        <div class="toggle-wrapper">
+          <button id="kasBtn" class="toggle-btn active">Saldo</button>
+          <button id="jimpitanBtn" class="toggle-btn">Stok</button>
+        </div>
+
+        <!-- Summary -->
+        <div class="summary-card">
+          <div class="summary-item">
+            <span class="summary-label">Saldo</span>
+            <span class="summary-value">
+              <span class="currency">Rp</span>
+              <span class="amount" id="saldoValue">0</span>
+            </span>
+          </div>
+
+          <div class="summary-row">
+            <div class="mini-box pemasukan">
+              <span class="mini-label">Pemasukan</span>
+              <span class="mini-value">
+                <span class="currency">Rp</span>
+                <span class="amount" id="pemasukanValue">0</span>
+              </span>
+            </div>
+
+            <div class="mini-box pengeluaran">
+              <span class="mini-label">Pengeluaran</span>
+              <span class="mini-value">
+                <span class="currency">Rp</span>
+                <span class="amount" id="pengeluaranValue">0</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alokasi Dana -->
+        <div class="section-title">Alokasi Dana</div>
+
+        <div class="alokasi-list">
+          <div class="alokasi-item">
+            <span>Dana Kas (20%)</span>
+            <strong id="danaKas">Rp 0</strong>
+          </div>
+
+          <div class="alokasi-item">
+            <span>Dana Sosial (40%)</span>
+            <strong id="danaSosial">Rp 0</strong>
+          </div>
+
+          <div class="alokasi-item">
+            <span>Dana Darurat (20%)</span>
+            <strong id="danaDarurat">Rp 0</strong>
+          </div>
+
+          <div class="alokasi-item">
+            <span>Uang Meja (20%)</span>
+            <strong id="uangMeja">Rp 0</strong>
+          </div>
+        </div>
+
+        <!-- Placeholder konten -->
+        <div id="tabContent" class="empty-card">
+          <h3>Keterangan</h3>
+          <p>Konten masih kosong dulu.</p>
+        </div>
+
+      </section>
+
+
+      <!-- Bottom Navigation -->
+      <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item active">
+          <div class="nav-icon">
+            <img src="assets/icons/icon-saldo.svg" alt="Saldo">
+          </div>
+          <span>Saldo</span>
+        </a>
+
+        <a href="stok.html" class="nav-item">
+          <div class="nav-icon">
+            <img src="assets/icons/icon-stok.svg" alt="Saldo">
+          </div>
+          <span>Stok</span>
+        </a>
+
+        <a href="menu.html" class="nav-item">
+          <div class="nav-icon">
+            <img src="assets/icons/icon-menu.svg" alt="Saldo">
+          </div>
+          <span>Menu</span>
+        </a>
+
+        <a href="transaksi.html" class="nav-item">
+          <div class="nav-icon">
+            <img src="assets/icons/icon-transaksi.svg" alt="Saldo">
+          </div>
+          <span>Transaksi</span>
+        </a>
+
+        <a href="lainnya.html" class="nav-item">
+          <div class="nav-icon">
+            <img src="assets/icons/icon-lainnya.svg" alt="Saldo">
+          </div>
+          <span>Lainnya</span>
+        </a>
+      </nav>
+
+
+    </section>
+  </main>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

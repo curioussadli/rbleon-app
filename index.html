@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="assets/icons/favicon.png" type="image/png">
+  <title>Login Grup</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <section class="login-screen">
+      <div class="login-box">
+
+        <!-- Grup -->
+        <div class="field-wrap">
+          <button id="groupBtn" class="field-btn" type="button">
+            <span id="groupText">Resto</span>
+          </button>
+          <div id="groupOptions" class="dropdown hidden"></div>
+        </div>
+
+        <!-- Petugas -->
+        <div class="field-wrap">
+          <button id="petugasBtn" class="field-btn" type="button" disabled>
+            <span id="petugasText">Crew</span>
+          </button>
+          <div id="petugasOptions" class="dropdown hidden"></div>
+        </div>
+
+        <!-- Tombol Masuk -->
+        <button id="masukBtn" class="masuk-btn" disabled>
+          Masuk
+        </button>
+
+      </div>
+    </section>
+  </main>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script src="script.js"></script>
+
+  <!-- SERVICE WORKER (WAJIB DI PALING BAWAH) -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log('SW registered'));
+    }
+  </script>
+
+</body>
+</html>
