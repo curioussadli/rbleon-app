@@ -7,13 +7,23 @@
     content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
   />
   <title>Dashboard</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 </head>
 <body>
   <main class="phone-shell">
     <section class="app-screen">
 
 
+
+
+      
 
       <!-- Dashboard Content -->
       <section class="dashboard-main">
@@ -23,41 +33,48 @@
 
           <!-- TOP NAVBAR -->
           <div class="topbar">
-            <button class="topbar-btn">
-              <img src="assets/icons/icon-back.svg" alt="Back">
-            </button>
 
             <h2 class="topbar-title">Saldo</h2>
 
-            <button class="topbar-btn">
-              <img src="assets/icons/icon-more.svg" alt="Menu">
-            </button>
           </div>
 
-
-          <!-- HEADER INFO (HARUS DI SINI) -->
-          <div class="dashboard-header">
-            <p id="petugasInfo">Grup • Petugas</p>
-          </div>
 
         </div>
 
-        <!-- Toggle -->
+
+        
+
+        <!-- =========================
+            TOGGLE
+        ========================= -->
         <div class="toggle-wrapper">
-          <button id="kasBtn" class="toggle-btn active">Saldo</button>
-          <button id="jimpitanBtn" class="toggle-btn">Stok</button>
+          <button id="saldoBtn" class="toggle-btn">Saldo</button>
+          <button id="inputBtn" class="toggle-btn">Input</button>
         </div>
 
-        <!-- Summary -->
-        <div class="summary-card">
-          <div class="summary-item">
-            <span class="summary-label">Saldo</span>
-            <span class="summary-value">
-              <span class="currency">Rp</span>
-              <span class="amount" id="saldoValue">0</span>
-            </span>
+        <!-- =========================
+            TAB SALDO
+        ========================= -->
+        <div id="saldoContent">
+
+          <!-- Summary -->
+          <div class="summary-card">
+            <div class="summary-item akhir">
+              <span class="summary-label">Saldo Akhir (Rp)</span>
+              <span class="summary-value">
+                <span class="amount" id="saldoAkhir">0</span>
+              </span>
+            </div>
+
+            <div class="summary-item awal">
+              <span class="summary-label">Saldo Awal (Rp)</span>
+              <span class="summary-value">
+                <span class="amount" id="saldoAwal">0</span>
+              </span>
+            </div>
           </div>
 
+          <!-- Mini Summary -->
           <div class="summary-row">
             <div class="mini-box pemasukan">
               <span class="mini-label">Pemasukan</span>
@@ -75,40 +92,93 @@
               </span>
             </div>
           </div>
+
+          <!-- Pendapatan -->
+          <div class="pendapatan-list">
+            <div class="pendapatan-item">
+              <span>Pendapatan</span>
+              <strong id="pendapatan">Rp 0</strong>
+            </div>
+
+            <div class="pendapatan-item">
+              <span>Selisih +/-</span>
+              <strong id="selisih">Rp 0</strong>
+            </div>
+          </div>
+
+
+
+          <!-- Placeholder -->
+          <div id="tabContent" class="empty-card">
+            <h3>Keterangan</h3>
+            <p>Konten masih kosong dulu.</p>
+          </div>
+
         </div>
 
-        <!-- Alokasi Dana -->
-        <div class="section-title">Alokasi Dana</div>
+        <!-- =========================
+            TAB INPUT
+        ========================= -->
+        <div id="inputContent" style="display: none;">
 
-        <div class="alokasi-list">
-          <div class="alokasi-item">
-            <span>Dana Kas (20%)</span>
-            <strong id="danaKas">Rp 0</strong>
+          <div class="input-group">
+            <label class="input-label">Saldo Awal</label>
+            
+            <div class="input-wrapper">
+              <span class="currency">Rp</span>
+              <input 
+                type="text" 
+                id="saldoAwalInput" 
+                placeholder="0"
+                inputmode="numeric"
+              />
+            </div>
           </div>
 
-          <div class="alokasi-item">
-            <span>Dana Sosial (40%)</span>
-            <strong id="danaSosial">Rp 0</strong>
+          <!-- TOMBOL SIMPAN -->
+          <button id="saveSaldoBtn" class="primary-btn">
+            Simpan
+          </button>
+
+
+
+          <!-- =========================
+              SALDO AKHIR
+          ========================= -->
+          <div class="input-group">
+            <label class="input-label">Saldo Akhir</label>
+            
+            <div class="input-wrapper">
+              <span class="currency">Rp</span>
+              <input 
+                type="text" 
+                id="saldoAkhirInput"
+                placeholder="0"
+                inputmode="numeric"
+              />
+            </div>
           </div>
 
-          <div class="alokasi-item">
-            <span>Dana Darurat (20%)</span>
-            <strong id="danaDarurat">Rp 0</strong>
+          <!-- TOMBOL SIMPAN -->
+          <button id="saveSaldoAkhirBtn" class="primary-btn">
+            Simpan
+          </button>
+
+
+
+
+
+
+          <div class="empty-card">
+            <h3>Keterangan</h3>
+            <p>Isi tampilan di sini nanti</p>
           </div>
 
-          <div class="alokasi-item">
-            <span>Uang Meja (20%)</span>
-            <strong id="uangMeja">Rp 0</strong>
-          </div>
         </div>
 
-        <!-- Placeholder konten -->
-        <div id="tabContent" class="empty-card">
-          <h3>Keterangan</h3>
-          <p>Konten masih kosong dulu.</p>
-        </div>
 
       </section>
+
 
 
       <!-- Bottom Navigation -->
@@ -145,7 +215,7 @@
           <div class="nav-icon">
             <img src="assets/icons/icon-lainnya.svg" alt="Saldo">
           </div>
-          <span>Lainnya</span>
+          <span>Laporan</span>
         </a>
       </nav>
 
@@ -153,6 +223,17 @@
     </section>
   </main>
 
-  <script src="dashboard.js"></script>
+
+<script>
+  const isLogin = localStorage.getItem("login");
+
+  if (!isLogin) {
+    window.location.href = "index.html";
+  }
+</script>
+
+
+  <!-- <script src="js/main.js" defer></script> -->
+  <script type="module" src="../js/dashboard.js"></script>
 </body>
 </html>
