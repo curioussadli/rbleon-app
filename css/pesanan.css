@@ -1,0 +1,148 @@
+
+
+/* =========================
+   PAGE WRAPPER
+========================= */
+.pesanan-page {
+  padding-top: 80px; /* space untuk topbar */
+}
+
+/* =========================
+   MAIN CONTENT
+========================= */
+.pesanan-main {
+  flex: 1;
+  width: 100%;
+  padding: 8px 22px 100px; /* bawah untuk bottom nav */
+  overflow-y: auto;
+  margin-top: 12px;
+}
+
+.pesanan-main::-webkit-scrollbar {
+  display: none;
+}
+
+
+
+
+/* =========================
+   PAGE LAYOUT
+========================= */
+body {
+  background: #f5f6fa;
+  margin: 0;
+  padding: 0;
+}
+
+/* =========================
+   RECEIPT CARD
+========================= */
+.receipt {
+  max-width: 420px;
+  margin: 16px auto;
+  background: #fff;
+  padding: 16px;
+  border-radius: 5px;
+
+}
+
+/* Title */
+.title {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+/* =========================
+   ORDER LIST
+========================= */
+#orderList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+/* item pesanan */
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px dashed #ddd;
+  font-size: 14px;
+}
+
+.order-item:last-child {
+  border-bottom: none;
+}
+
+/* =========================
+   TOTAL
+========================= */
+.total {
+  font-size: 14px;
+  font-weight: 700;
+  text-align: right;
+  margin: 12px 0;
+}
+
+/* =========================
+   BUTTON BAYAR
+========================= */
+.pay-btn {
+  width: 100%;
+  background: #dadada;
+  color: rgb(0, 0, 0);
+  border: none;
+  padding: 14px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.pay-btn:hover {
+  background: #ddc80a;
+}
+
+.pay-btn:active {
+  transform: scale(0.98);
+}
+
+
+
+/* item pesanan */
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* sejajarkan tengah */
+  padding: 10px 0;
+  border-bottom: 1px dashed #ddd;
+  font-size: 14px;
+}
+
+/* kiri: nama + qty */
+.item-info {
+  display: flex;
+  gap: 8px; /* jarak antara nama dan qty */
+  align-items: center;
+}
+
+/* nama item */
+.item-name {
+  font-weight: 600;
+}
+
+/* qty */
+.item-qty {
+  color: #666;
+  font-size: 13px;
+}
+
+/* kanan: harga */
+.item-price {
+  font-weight: 700;
+  min-width: 80px; /* biar rata kanan rapi */
+  text-align: right;
+}
