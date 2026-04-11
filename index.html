@@ -7,7 +7,19 @@
   <meta name="theme-color" content="#ffffff">
   <link rel="icon" href="assets/icons/favicon.png" type="image/png">
   <title>Login Grup</title>
-  <link rel="stylesheet" href="style.css" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- GLOBAL -->
+  <link rel="stylesheet" href="css/main.css">
+
+  <!-- COMPONENT -->
+  <link rel="stylesheet" href="css/components.css">
+
+  <!-- KHUSUS LOGIN -->
+  <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
   <main class="app">
@@ -52,7 +64,15 @@
 
   
 
-  <script src="script.js"></script>
+  <script src="js/main.js" defer></script>
+
+  <script>
+    const isLogin = localStorage.getItem("login");
+
+    if (isLogin) {
+      window.location.href = "dashboard.html";
+    }
+  </script>
 
   <!-- SERVICE WORKER (WAJIB DI PALING BAWAH) -->
   <script>
@@ -61,6 +81,9 @@
         .then(() => console.log('SW registered'));
     }
   </script>
+
+  <script type="module" src="js/firebase.js"></script>
+
 
 </body>
 </html>
