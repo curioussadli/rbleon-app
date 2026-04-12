@@ -3,48 +3,38 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#ffffff">
+  
   <link rel="icon" href="assets/icons/favicon.png" type="image/png">
   <link rel="icon" href="assets/icons/icon-192.png">
-  <title>Login Grup</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Login</title>
 
-  <!-- GLOBAL -->
   <link rel="stylesheet" href="css/main.css">
-
-  <!-- COMPONENT -->
   <link rel="stylesheet" href="css/components.css">
-
-  <!-- KHUSUS LOGIN -->
   <link rel="stylesheet" href="css/login.css">
 </head>
+
 <body>
+
   <main class="app">
     <section class="login-screen">
       <div class="login-box">
 
-        <!-- Grup -->
-        <div class="field-wrap">
-          <button id="groupBtn" class="field-btn" type="button">
-            <span id="groupText">Resto</span>
-          </button>
-          <div id="groupOptions" class="dropdown hidden"></div>
-        </div>
+        <!-- 🔵 GOOGLE LOGIN -->
+        <button id="googleLogin" class="btn google">
+          Login dengan Google
+        </button>
 
-        <!-- Petugas -->
-        <div class="field-wrap">
-          <button id="petugasBtn" class="field-btn" type="button" disabled>
-            <span id="petugasText">Crew</span>
-          </button>
-          <div id="petugasOptions" class="dropdown hidden"></div>
-        </div>
+        <!-- ⚪ DAFTAR (DUMMY) -->
+        <button id="daftarBtn" class="btn secondary">
+          Daftar
+        </button>
 
-        <!-- Tombol Masuk -->
-        <button id="masukBtn" class="masuk-btn" disabled>
+        <!-- 🟢 MASUK (BYPASS) -->
+        <button id="masukBtn" class="btn primary">
           Masuk
         </button>
 
@@ -52,39 +42,23 @@
     </section>
   </main>
 
+  <!-- MAIN JS -->
+  <script type="module" src="js/main.js"></script>
 
-
-
-<button id="googleLogin">Login dengan Google</button>
-
-
-
-
-
-
-
-  
-
-  <script src="js/main.js" defer></script>
-
+  <!-- AUTO LOGIN CHECK -->
   <script>
-    const isLogin = localStorage.getItem("login");
-
-    if (isLogin) {
+    if (localStorage.getItem("login")) {
       window.location.href = "dashboard.html";
     }
   </script>
 
-  <!-- SERVICE WORKER (WAJIB DI PALING BAWAH) -->
+  <!-- SERVICE WORKER -->
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('service-worker.js')
         .then(() => console.log('SW registered'));
     }
   </script>
-
-  <script type="module" src="js/firebase.js"></script>
-
 
 </body>
 </html>
