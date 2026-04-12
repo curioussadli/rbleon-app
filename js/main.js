@@ -30,26 +30,3 @@ if (googleBtn) {
     }
   });
 }
-
-
-// =============================
-// BUTTON DAFTAR (DUMMY)
-// =============================
-const daftarBtn = document.getElementById("daftarBtn");
-if (daftarBtn) {
-  daftarBtn.addEventListener("click", () => {
-    alert("Fitur Daftar belum aktif");
-  });
-}
-
-
-// =============================
-// BUTTON MASUK (BYPASS LOGIN)
-// =============================
-const masukBtn = document.getElementById("masukBtn");
-if (masukBtn) {
-  masukBtn.addEventListener("click", () => {
-    localStorage.setItem("login", "true");
-    window.location.href = "dashboard.html";
-  });
-}
