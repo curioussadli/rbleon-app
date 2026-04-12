@@ -1,4 +1,4 @@
-const CACHE_NAME = "app-cache-v3";
+const CACHE_NAME = "rbleon-v1";
 
 const FILES_TO_CACHE = [
   "/rbleon-app/",
@@ -16,7 +16,7 @@ const FILES_TO_CACHE = [
 // INSTALL
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(FILES_TO_CACHE))
+    caches.open(CACHE_NAME).then(cache => cache.addAll(FILES_TO_CACHE))
   );
   self.skipWaiting();
 });
@@ -24,8 +24,10 @@ self.addEventListener("install", (event) => {
 // ACTIVATE
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.map((key) => key !== CACHE_NAME && caches.delete(key)))
+    caches.keys().then(keys =>
+      Promise.all(
+        keys.map(key => key !== CACHE_NAME && caches.delete(key))
+      )
     )
   );
   self.clients.claim();
@@ -34,6 +36,6 @@ self.addEventListener("activate", (event) => {
 // FETCH
 self.addEventListener("fetch", (event) => {
   event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request))
+    caches.match(event.request).then(res => res || fetch(event.request))
   );
 });
