@@ -11,28 +11,33 @@ window.addEventListener("beforeinstallprompt", (e) => {
 
 
 // =============================
-// GOOGLE LOGIN (REAL FIREBASE)
+// GOOGLE LOGIN
 // =============================
 import { loginWithGoogle } from "./auth.js";
 
+import { auth } from "./firebase.js";
 import { onAuthStateChanged } 
 from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-import { auth } from "./firebase.js";
-
 const googleBtn = document.getElementById("googleLogin");
+
+// 🔥 GLOBAL LISTENER (JALAN SEKALI SAJA)
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    console.log("Already logged in:", user.email);
+    window.location.href = "dashboard.html";
+  }
+});
 
 if (googleBtn) {
   googleBtn.addEventListener("click", async () => {
     try {
       await loginWithGoogle();
 
-      // 🔥 tunggu Firebase benar-benar login
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          window.location.href = "dashboard.html";
-        }
-      });
+      // 🔥 kasih waktu Firebase sync session
+      setTimeout(() => {
+        window.location.href = "dashboard.html";
+      }, 300);
 
     } catch (err) {
       console.error(err);
