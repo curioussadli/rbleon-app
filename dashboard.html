@@ -3,17 +3,23 @@
 <head>
   <meta charset="UTF-8" />
 
-  <!-- RESPONSIVE MOBILE -->
+  <!-- =====================================================
+       📱 RESPONSIVE MOBILE VIEW
+  ===================================================== -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 
   <title>Dashboard</title>
 
-  <!-- CSS UTAMA -->
+  <!-- =====================================================
+       🎨 GLOBAL STYLES
+  ===================================================== -->
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/dashboard.css">
 
-  <!-- FONT -->
+  <!-- =====================================================
+       🔤 FONT
+  ===================================================== -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -26,34 +32,34 @@
     <section class="app-screen">
 
       <!-- =====================================================
-           📊 DASHBOARD MAIN AREA
+           📊 DASHBOARD MAIN WRAPPER
       ===================================================== -->
       <section class="dashboard-main">
 
-        <!-- =========================
-             TOP BAR / HEADER
-        ========================= -->
+        <!-- =====================================================
+             🧭 TOP BAR
+        ===================================================== -->
         <div class="dashboard-page">
           <div class="topbar">
 
-            <!-- JUDUL HALAMAN -->
-            <h2 class="topbar-title">Saldo</h2>
+            <!-- 🔥 TITLE (akan bisa diubah via JS nanti) -->
+            <h2 class="topbar-title" id="pageTitle">Saldo</h2>
 
           </div>
         </div>
 
 
         <!-- =====================================================
-             🔘 TOGGLE TAB (Saldo / Input)
+             🔘 TAB SWITCHER
         ===================================================== -->
         <div class="toggle-wrapper">
 
-          <!-- tombol tab saldo -->
-          <button id="saldoBtn" class="toggle-btn">
+          <!-- TAB: SALDO (DEFAULT ACTIVE) -->
+          <button id="saldoBtn" class="toggle-btn active">
             Saldo
           </button>
 
-          <!-- tombol tab input -->
+          <!-- TAB: INPUT -->
           <button id="inputBtn" class="toggle-btn">
             Input
           </button>
@@ -62,11 +68,11 @@
 
 
         <!-- =====================================================
-             📊 TAB: SALDO (VIEW DATA)
+             📊 TAB CONTENT: SALDO
         ===================================================== -->
         <div id="saldoContent">
 
-          <!-- SALDO UTAMA -->
+          <!-- 💰 SALDO SUMMARY -->
           <div class="summary-card">
 
             <!-- SALDO AKHIR -->
@@ -88,7 +94,7 @@
           </div>
 
 
-          <!-- MINI SUMMARY (PEMASUKAN & PENGELUARAN) -->
+          <!-- 📊 MINI SUMMARY -->
           <div class="summary-row">
 
             <!-- PEMASUKAN -->
@@ -112,7 +118,7 @@
           </div>
 
 
-          <!-- PERHITUNGAN LANJUT (ISI NANTI DARI JS) -->
+          <!-- 📈 SUMMARY PERHITUNGAN -->
           <div class="pendapatan-list">
 
             <div class="pendapatan-item">
@@ -128,7 +134,7 @@
           </div>
 
 
-          <!-- PLACEHOLDER INFO -->
+          <!-- 📝 INFO -->
           <div class="empty-card">
             <h3>Keterangan</h3>
             <p>Konten masih kosong dulu.</p>
@@ -138,7 +144,7 @@
 
 
         <!-- =====================================================
-             📝 TAB: INPUT (FORM INPUT SALDO)
+             📝 TAB CONTENT: INPUT
         ===================================================== -->
         <div id="inputContent" style="display:none;">
 
@@ -160,7 +166,7 @@
 
           </div>
 
-          <!-- BUTTON SIMPAN SALDO AWAL -->
+          <!-- BUTTON SIMPAN -->
           <button id="saveSaldoBtn" class="primary-btn">
             Simpan
           </button>
@@ -184,16 +190,16 @@
 
           </div>
 
-          <!-- BUTTON SIMPAN SALDO AKHIR -->
+          <!-- BUTTON SIMPAN -->
           <button id="saveSaldoAkhirBtn" class="primary-btn">
             Simpan
           </button>
 
 
-          <!-- INFO TAMBAHAN -->
+          <!-- INFO -->
           <div class="empty-card">
             <h3>Keterangan</h3>
-            <p>Isi tampilan input nanti bisa dikembangkan.</p>
+            <p>Input saldo akan disimpan ke Firebase realtime.</p>
           </div>
 
         </div>
@@ -248,7 +254,7 @@
 
 
   <!-- =====================================================
-       ⚙️ DASHBOARD LOGIC (FIREBASE + TAB + REALTIME)
+       ⚙️ DASHBOARD LOGIC (FIREBASE + TAB SYSTEM)
   ===================================================== -->
   <script type="module" src="js/dashboard.js"></script>
 
