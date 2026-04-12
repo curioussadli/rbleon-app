@@ -2,15 +2,28 @@
 // 🔐 AUTH GUARD FIX (ANTI FLICKER)
 // =====================================================
 import { auth } from "./firebase.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { onAuthStateChanged } 
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
+let ready = false;
+
+// ❗ JANGAN REDIRECT SEBELUM READY
 onAuthStateChanged(auth, (user) => {
-  if (!user) {
-    window.location.replace("index.html");
-  } else {
+  ready = true;
+
+  if (user) {
     console.log("LOGIN OK:", user.email);
+  } else {
+    window.location.replace("index.html");
   }
 });
+
+// safety delay
+setTimeout(() => {
+  if (!ready) {
+    console.log("Auth loading...");
+  }
+}, 1500);
 
 
 // =====================================================
