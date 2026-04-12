@@ -1,11 +1,11 @@
 
+// =====================================================
+// 🔥 FIREBASE INIT (DARI firebase.js)
+// =====================================================
 import { db } from "./firebase.js";
-import {
-  doc,
-  setDoc,
-  onSnapshot,
-  collection
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { doc, setDoc, onSnapshot, collection } 
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
 
 
 // =====================================================
