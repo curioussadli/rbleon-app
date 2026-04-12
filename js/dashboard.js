@@ -1,12 +1,14 @@
+
 import {
   db,
   doc,
-  setDoc
+  setDoc,
+  onSnapshot
 } from "./firebase.js";
 
 
 // =====================================================
-// 🎛️ TAB SYSTEM (AMAN)
+// 🎛️ TAB SYSTEM (AMAN + STABLE)
 // =====================================================
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -42,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   // =====================================================
-  // 🧾 INPUT SALDO (SAFE)
+  // 🧾 INPUT FORMAT RUPIAH
   // =====================================================
   const inputAwal = document.getElementById("saldoAwalInput");
   const inputAkhir = document.getElementById("saldoAkhirInput");
@@ -61,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   // =====================================================
-  // 💾 SAVE SALDO (FIXED)
+  // 💾 SAVE KE FIREBASE
   // =====================================================
   const saveBtn = document.getElementById("saveSaldoBtn");
 
@@ -71,6 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const saldoAkhir = parseInt((inputAkhir?.value || "0").replace(/\./g, "")) || 0;
 
     try {
+
       await setDoc(doc(db, "saldo", "utama"), {
         saldoAwal,
         saldoAkhir,
@@ -82,6 +85,37 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (err) {
       console.error("❌ Error simpan saldo:", err);
     }
+  });
+
+
+  // =====================================================
+  // 🔥 REALTIME UPDATE (INI YANG KAMU KURANG)
+  // =====================================================
+  const saldoRef = doc(db, "saldo", "utama");
+
+  onSnapshot(saldoRef, (snap) => {
+
+    if (!snap.exists()) {
+      console.warn("⚠ Data saldo belum ada");
+      return;
+    }
+
+    const data = snap.data();
+
+    // ambil element UI
+    const saldoAwalEl = document.getElementById("saldoAwalValue");
+    const saldoAkhirEl = document.getElementById("saldoAkhirValue");
+
+    console.log("🔄 REALTIME UPDATE:", data);
+
+    if (saldoAwalEl) {
+      saldoAwalEl.textContent = Number(data.saldoAwal || 0).toLocaleString("id-ID");
+    }
+
+    if (saldoAkhirEl) {
+      saldoAkhirEl.textContent = Number(data.saldoAkhir || 0).toLocaleString("id-ID");
+    }
+
   });
 
 });
