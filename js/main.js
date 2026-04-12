@@ -1,73 +1,75 @@
 // =====================================================
-// 📦 MAIN JS (CLEAN VERSION)
-// Fokus: PWA + Service Worker saja
-// Login system SUDAH DIHAPUS
+// 📦 MAIN JS (PWA CORE ONLY - CLEAN VERSION)
+// Tidak ada login, tidak ada business logic
 // =====================================================
 
 
-// =============================
-// 📦 PWA INSTALL PROMPT
-// =============================
-let deferredPrompt; // simpan event install PWA
+// =====================================================
+// 📦 PWA INSTALL PROMPT HANDLER
+// =====================================================
+let deferredPrompt;
 
 window.addEventListener("beforeinstallprompt", (e) => {
 
   e.preventDefault(); // cegah popup otomatis install
-  deferredPrompt = e; // simpan event untuk trigger manual
+  deferredPrompt = e; // simpan event install
 
-  console.log("PWA siap diinstall");
+  // log debug (hapus kalau production)
+  console.log("📦 PWA install available");
 });
 
 
 // =====================================================
-// ⚙️ SERVICE WORKER (OFFLINE CACHE + AUTO UPDATE)
+// ⚙️ SERVICE WORKER REGISTER
 // =====================================================
 if ("serviceWorker" in navigator) {
 
-  navigator.serviceWorker
-    .register("service-worker.js") // file service worker kamu
+  window.addEventListener("load", () => {
 
-    .then((reg) => {
+    navigator.serviceWorker
+      .register("/service-worker.js") // 🔥 pakai root path biar aman
 
-      console.log("Service Worker aktif");
+      .then((reg) => {
 
-      // paksa cek update saat load
-      reg.update();
+        console.log("🔥 Service Worker registered");
 
-      // auto check update setiap 60 detik
-      setInterval(() => {
+        // paksa cek update awal
         reg.update();
-      }, 60000);
 
-    })
+        // auto update checker
+        setInterval(() => {
+          reg.update();
+        }, 60000);
 
-    .catch((err) => {
-      console.error("Service Worker error:", err);
-    });
+      })
+
+      .catch((err) => {
+        console.error("❌ Service Worker error:", err);
+      });
+  });
 }
 
 
 // =====================================================
-// 🚀 OPTIONAL: MANUAL INSTALL BUTTON (kalau kamu pakai tombol install)
+// 🚀 OPTIONAL INSTALL BUTTON HANDLER
 // =====================================================
-
-// contoh kalau kamu punya tombol install di HTML:
-// <button id="installBtn">Install App</button>
-
 const installBtn = document.getElementById("installBtn");
 
 if (installBtn) {
 
   installBtn.addEventListener("click", async () => {
 
-    if (!deferredPrompt) return;
+    if (!deferredPrompt) {
+      console.log("⚠️ Install prompt not ready");
+      return;
+    }
 
-    deferredPrompt.prompt(); // munculkan dialog install
+    deferredPrompt.prompt();
 
     const result = await deferredPrompt.userChoice;
 
-    console.log("Install result:", result.outcome);
+    console.log("📦 Install result:", result.outcome);
 
-    deferredPrompt = null; // reset
+    deferredPrompt = null;
   });
 }
