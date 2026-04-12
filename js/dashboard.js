@@ -17,7 +17,7 @@ onAuthStateChanged(auth, (user) => {
     document.body.style.display = "block";
 
   } else {
-    window.location.replace("index.html");
+    window.location.replace("dashboard.html");
   }
 
 });
