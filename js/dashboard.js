@@ -5,25 +5,22 @@ import { auth } from "./firebase.js";
 import { onAuthStateChanged } 
 from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-// ⛔ TUNGGU STATUS AUTH STABIL
-let authChecked = false;
+// 🔥 block UI dulu (anti flicker)
+document.body.style.display = "none";
 
 onAuthStateChanged(auth, (user) => {
-  authChecked = true;
 
+  // ⛔ JANGAN CEK NULL TERLALU CEPAT
   if (user) {
     console.log("Login OK:", user.email);
+
+    document.body.style.display = "block";
+
   } else {
     window.location.replace("index.html");
   }
-});
 
-// 🧠 SAFETY NET (kalau auth lambat)
-setTimeout(() => {
-  if (!authChecked) {
-    console.warn("Auth masih loading...");
-  }
-}, 2000);
+});
 
 
 // =====================================================
