@@ -1,17 +1,12 @@
-// =====================================================
-// 📦 IMPORT FIREBASE (WAJIB)
-// =====================================================
 import {
   db,
   doc,
-  setDoc,
-  collection,
-  onSnapshot
+  setDoc
 } from "./firebase.js";
 
 
 // =====================================================
-// 🎛️ TAB SYSTEM (SAFE INIT)
+// 🎛️ TAB SYSTEM (AMAN)
 // =====================================================
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -25,15 +20,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!saldoBtn || !inputBtn || !saldoContent || !inputContent) return;
 
-    // reset tombol
     saldoBtn.classList.remove("active");
     inputBtn.classList.remove("active");
 
-    // hide semua tab
     saldoContent.style.display = "none";
     inputContent.style.display = "none";
 
-    // aktifkan tab
     if (type === "saldo") {
       saldoBtn.classList.add("active");
       saldoContent.style.display = "block";
@@ -43,67 +35,53 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // event klik tab
   saldoBtn?.addEventListener("click", () => setActiveTab("saldo"));
   inputBtn?.addEventListener("click", () => setActiveTab("input"));
 
-  // default tab
   setActiveTab("saldo");
-});
 
 
-// =====================================================
-// 💰 FORMAT RUPIAH INPUT
-// =====================================================
-function formatInput(el) {
+  // =====================================================
+  // 🧾 INPUT SALDO (SAFE)
+  // =====================================================
+  const inputAwal = document.getElementById("saldoAwalInput");
+  const inputAkhir = document.getElementById("saldoAkhirInput");
 
-  if (!el) return;
+  function formatInput(el) {
+    if (!el) return;
 
-  el.addEventListener("input", (e) => {
-
-    let value = e.target.value.replace(/\D/g, "");
-
-    e.target.value = new Intl.NumberFormat("id-ID").format(value);
-  });
-}
-
-
-// =====================================================
-// 🧾 INPUT ELEMENT (SAFE)
-// =====================================================
-const inputAwal = document.getElementById("saldoAwalInput");
-const inputAkhir = document.getElementById("saldoAkhirInput");
-
-formatInput(inputAwal);
-formatInput(inputAkhir);
-
-
-// =====================================================
-// 💾 SAVE SALDO KE FIREBASE
-// =====================================================
-async function saveSaldo() {
-
-  const saldoAwal = parseInt((inputAwal?.value || "0").replace(/\./g, "")) || 0;
-  const saldoAkhir = parseInt((inputAkhir?.value || "0").replace(/\./g, "")) || 0;
-
-  try {
-
-    await setDoc(doc(db, "saldo", "utama"), {
-      saldoAwal,
-      saldoAkhir,
-      updatedAt: new Date()
+    el.addEventListener("input", (e) => {
+      let value = e.target.value.replace(/\D/g, "");
+      e.target.value = new Intl.NumberFormat("id-ID").format(value);
     });
-
-    alert("✔ Saldo berhasil disimpan");
-
-  } catch (err) {
-    console.error("❌ Error simpan saldo:", err);
   }
-}
+
+  formatInput(inputAwal);
+  formatInput(inputAkhir);
 
 
-// =====================================================
-// 🔘 BUTTON SAVE
-// =====================================================
-document.getElementById("saveSaldoBtn")
-  ?.
+  // =====================================================
+  // 💾 SAVE SALDO (FIXED)
+  // =====================================================
+  const saveBtn = document.getElementById("saveSaldoBtn");
+
+  saveBtn?.addEventListener("click", async () => {
+
+    const saldoAwal = parseInt((inputAwal?.value || "0").replace(/\./g, "")) || 0;
+    const saldoAkhir = parseInt((inputAkhir?.value || "0").replace(/\./g, "")) || 0;
+
+    try {
+      await setDoc(doc(db, "saldo", "utama"), {
+        saldoAwal,
+        saldoAkhir,
+        updatedAt: new Date()
+      });
+
+      alert("✔ Saldo berhasil disimpan");
+
+    } catch (err) {
+      console.error("❌ Error simpan saldo:", err);
+    }
+  });
+
+});
