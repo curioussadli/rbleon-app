@@ -1,8 +1,10 @@
+// =====================================================
+// 🔐 AUTH GUARD (WAJIB PALING ATAS)
+// =====================================================
+import { auth, db } from "./firebase.js";
+import { onAuthStateChanged } 
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-// =====================================================
-// 🔥 FIREBASE IMPORT (HARUS PALING ATAS)
-// =====================================================
-import { db } from "./firebase.js";
 import {
   doc,
   setDoc,
@@ -10,6 +12,14 @@ import {
   collection
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+// ⛔ STOP ACCESS JIKA BELUM LOGIN
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    window.location.href = "index.html";
+  } else {
+    console.log("Login OK:", user.email);
+  }
+});
 
 
 // =====================================================
@@ -21,83 +31,57 @@ const inputBtn = document.getElementById("inputBtn");
 const saldoContent = document.getElementById("saldoContent");
 const inputContent = document.getElementById("inputContent");
 
-
-// =====================================================
-// 🔄 TAB CONTROLLER
-// =====================================================
 function setActiveTab(type) {
   if (!saldoBtn || !inputBtn || !saldoContent || !inputContent) return;
 
+  saldoBtn.classList.remove("active");
+  inputBtn.classList.remove("active");
+
+  saldoContent.style.display = "none";
+  inputContent.style.display = "none";
+
   if (type === "saldo") {
     saldoBtn.classList.add("active");
-    inputBtn.classList.remove("active");
-
     saldoContent.style.display = "block";
-    inputContent.style.display = "none";
-
   } else {
     inputBtn.classList.add("active");
-    saldoBtn.classList.remove("active");
-
     inputContent.style.display = "block";
-    saldoContent.style.display = "none";
   }
+}
+
+if (saldoBtn && inputBtn) {
+  saldoBtn.addEventListener("click", () => setActiveTab("saldo"));
+  inputBtn.addEventListener("click", () => setActiveTab("input"));
+
+  setActiveTab("saldo");
 }
 
 
 // =====================================================
-// 🎯 EVENT TAB CLICK
+// 💰 FORMAT INPUT
 // =====================================================
-document.addEventListener("DOMContentLoaded", () => {
+function formatInput(el) {
+  if (!el) return;
 
-  const saldoBtn = document.getElementById("saldoBtn");
-  const inputBtn = document.getElementById("inputBtn");
+  el.addEventListener("input", (e) => {
+    let value = e.target.value.replace(/\D/g, "");
+    e.target.value = new Intl.NumberFormat("id-ID").format(value);
+  });
+}
 
-  if (saldoBtn) {
-    saldoBtn.addEventListener("click", () => setActiveTab("saldo"));
-  }
+formatInput(document.getElementById("saldoAwalInput"));
+formatInput(document.getElementById("saldoAkhirInput"));
 
-  if (inputBtn) {
-    inputBtn.addEventListener("click", () => setActiveTab("input"));
-  }
-
-  // default tab
-  setActiveTab("saldo");
-});
 
 // =====================================================
-// 💰 FORMAT INPUT SALDO
+// 💾 SIMPAN SALDO
 // =====================================================
 const inputAwal = document.getElementById("saldoAwalInput");
-if (inputAwal) {
-  inputAwal.addEventListener("input", (e) => {
-    let value = e.target.value.replace(/\D/g, "");
-    e.target.value = new Intl.NumberFormat("id-ID").format(value);
-  });
-}
-
 const inputAkhir = document.getElementById("saldoAkhirInput");
-if (inputAkhir) {
-  inputAkhir.addEventListener("input", (e) => {
-    let value = e.target.value.replace(/\D/g, "");
-    e.target.value = new Intl.NumberFormat("id-ID").format(value);
-  });
-}
 
-
-// =====================================================
-// 💾 SIMPAN SALDO KE FIREBASE
-// =====================================================
-const saveBtn = document.getElementById("saveSaldoBtn");
-const saveAkhirBtn = document.getElementById("saveSaldoAkhirBtn");
-
-async function saveSaldoToFirebase() {
-
-  const saldoAwal =
-    parseInt((inputAwal?.value || "0").replace(/\./g, "")) || 0;
-
-  const saldoAkhir =
-    parseInt((inputAkhir?.value || "0").replace(/\./g, "")) || 0;
+async function saveSaldo() {
+  const saldoAwal = parseInt((inputAwal?.value || "0").replace(/\./g, "")) || 0;
+  const saldoAkhir = parseInt((inputAkhir?.value || "0").replace(/\./g, "")) || 0;
 
   try {
     await setDoc(doc(db, "saldo", "utama"), {
@@ -107,106 +91,62 @@ async function saveSaldoToFirebase() {
     });
 
     alert("Saldo berhasil disimpan 🚀");
-
   } catch (err) {
-    console.error("Gagal simpan saldo:", err);
+    console.error(err);
   }
 }
 
-if (saveBtn) saveBtn.addEventListener("click", saveSaldoToFirebase);
-if (saveAkhirBtn) saveAkhirBtn.addEventListener("click", saveSaldoToFirebase);
+document.getElementById("saveSaldoBtn")?.addEventListener("click", saveSaldo);
+document.getElementById("saveSaldoAkhirBtn")?.addEventListener("click", saveSaldo);
 
 
 // =====================================================
-// 🔥 REALTIME SALDO (DASHBOARD)
+// 🔥 REALTIME SALDO
 // =====================================================
-const saldoRef = doc(db, "saldo", "utama");
-
-onSnapshot(saldoRef, (snap) => {
-
+onSnapshot(doc(db, "saldo", "utama"), (snap) => {
   if (!snap.exists()) return;
 
   const data = snap.data();
 
-  const elAwal = document.getElementById("saldoAwal");
-  if (elAwal) {
-    elAwal.textContent =
-      new Intl.NumberFormat("id-ID").format(data.saldoAwal || 0);
-  }
+  document.getElementById("saldoAwal")?.textContent =
+    new Intl.NumberFormat("id-ID").format(data.saldoAwal || 0);
 
-  const elAkhir = document.getElementById("saldoAkhir");
-  if (elAkhir) {
-    elAkhir.textContent =
-      new Intl.NumberFormat("id-ID").format(data.saldoAkhir || 0);
-  }
+  document.getElementById("saldoAkhir")?.textContent =
+    new Intl.NumberFormat("id-ID").format(data.saldoAkhir || 0);
 });
 
 
 // =====================================================
-// 💸 REALTIME PENGELUARAN (FIX UTAMA)
+// 💸 PENGELUARAN REALTIME
 // =====================================================
-function listenPengeluaran(db) {
+onSnapshot(collection(db, "transaksi"), (snapshot) => {
+  let total = 0;
 
-  const colRef = collection(db, "transaksi");
-
-  onSnapshot(colRef, (snapshot) => {
-
-    let totalKeluar = 0;
-
-    snapshot.forEach((doc) => {
-      const data = doc.data();
-
-      // 🔥 SESUAI FIREBASE KAMU
-      if (data.type === "keluar") {
-        totalKeluar += Number(data.nominal || 0);
-      }
-    });
-
-    const pengeluaranEl = document.getElementById("pengeluaranValue");
-
-    if (pengeluaranEl) {
-      pengeluaranEl.textContent =
-        totalKeluar.toLocaleString("id-ID");
+  snapshot.forEach((doc) => {
+    const data = doc.data();
+    if (data.type === "keluar") {
+      total += Number(data.nominal || 0);
     }
   });
-}
+
+  document.getElementById("pengeluaranValue")?.textContent =
+    total.toLocaleString("id-ID");
+});
 
 
 // =====================================================
-// 🚀 START LISTENER
+// 💰 PEMASUKAN REALTIME
 // =====================================================
-listenPengeluaran(db);
+onSnapshot(collection(db, "penjualan"), (snapshot) => {
+  let total = 0;
 
-
-
-
-
-
-document.addEventListener("DOMContentLoaded", () => {
-
-  // =============================
-  // 💰 REALTIME TOTAL PEMASUKAN
-  // =============================
-  const pemasukanEl = document.getElementById("pemasukanValue");
-
-  if (!pemasukanEl) {
-    console.warn("pemasukanValue tidak ditemukan");
-    return;
-  }
-
-  onSnapshot(collection(db, "penjualan"), (snapshot) => {
-
-    let totalMasuk = 0;
-
-    snapshot.forEach((doc) => {
-      const data = doc.data();
-
-      if (data.type === "masuk") {
-        totalMasuk += Number(data.total || 0);
-      }
-    });
-
-    pemasukanEl.textContent = totalMasuk.toLocaleString("id-ID");
+  snapshot.forEach((doc) => {
+    const data = doc.data();
+    if (data.type === "masuk") {
+      total += Number(data.total || 0);
+    }
   });
 
+  document.getElementById("pemasukanValue")?.textContent =
+    total.toLocaleString("id-ID");
 });
