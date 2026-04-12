@@ -1,4 +1,16 @@
 
+// =====================================================
+// 🔥 FIREBASE IMPORT (HARUS PALING ATAS)
+// =====================================================
+import { db } from "./firebase.js";
+import {
+  doc,
+  setDoc,
+  onSnapshot,
+  collection
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+
 
 // =====================================================
 // 🎛️ TAB ELEMENT
@@ -52,15 +64,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // default tab
   setActiveTab("saldo");
 });
-
-
-// =====================================================
-// 🔥 FIREBASE INIT (DARI firebase.js)
-// =====================================================
-import { db } from "./firebase.js";
-import { doc, setDoc, onSnapshot, collection } 
-from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
 
 // =====================================================
 // 💰 FORMAT INPUT SALDO
