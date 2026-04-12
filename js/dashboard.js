@@ -1,121 +1,207 @@
+// =====================================================
+// 🎛️ TAB ELEMENT
+// =====================================================
+const saldoBtn = document.getElementById("saldoBtn");
+const inputBtn = document.getElementById("inputBtn");
 
-import {
-  db,
-  doc,
-  setDoc,
-  onSnapshot
-} from "./firebase.js";
+const saldoContent = document.getElementById("saldoContent");
+const inputContent = document.getElementById("inputContent");
 
 
 // =====================================================
-// 🎛️ TAB SYSTEM (AMAN + STABLE)
+// 🔄 TAB CONTROLLER
+// =====================================================
+function setActiveTab(type) {
+  if (!saldoBtn || !inputBtn || !saldoContent || !inputContent) return;
+
+  if (type === "saldo") {
+    saldoBtn.classList.add("active");
+    inputBtn.classList.remove("active");
+
+    saldoContent.style.display = "block";
+    inputContent.style.display = "none";
+
+  } else {
+    inputBtn.classList.add("active");
+    saldoBtn.classList.remove("active");
+
+    inputContent.style.display = "block";
+    saldoContent.style.display = "none";
+  }
+}
+
+
+// =====================================================
+// 🎯 EVENT TAB CLICK
 // =====================================================
 document.addEventListener("DOMContentLoaded", () => {
 
   const saldoBtn = document.getElementById("saldoBtn");
   const inputBtn = document.getElementById("inputBtn");
 
-  const saldoContent = document.getElementById("saldoContent");
-  const inputContent = document.getElementById("inputContent");
-
-  function setActiveTab(type) {
-
-    if (!saldoBtn || !inputBtn || !saldoContent || !inputContent) return;
-
-    saldoBtn.classList.remove("active");
-    inputBtn.classList.remove("active");
-
-    saldoContent.style.display = "none";
-    inputContent.style.display = "none";
-
-    if (type === "saldo") {
-      saldoBtn.classList.add("active");
-      saldoContent.style.display = "block";
-    } else {
-      inputBtn.classList.add("active");
-      inputContent.style.display = "block";
-    }
+  if (saldoBtn) {
+    saldoBtn.addEventListener("click", () => setActiveTab("saldo"));
   }
 
-  saldoBtn?.addEventListener("click", () => setActiveTab("saldo"));
-  inputBtn?.addEventListener("click", () => setActiveTab("input"));
+  if (inputBtn) {
+    inputBtn.addEventListener("click", () => setActiveTab("input"));
+  }
 
+  // default tab
   setActiveTab("saldo");
+});
 
 
-  // =====================================================
-  // 🧾 INPUT FORMAT RUPIAH
-  // =====================================================
-  const inputAwal = document.getElementById("saldoAwalInput");
-  const inputAkhir = document.getElementById("saldoAkhirInput");
+// =====================================================
+// 🔥 FIREBASE INIT (DARI firebase.js)
+// =====================================================
+import { db } from "./firebase.js";
+import { doc, setDoc, onSnapshot, collection } 
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  function formatInput(el) {
-    if (!el) return;
 
-    el.addEventListener("input", (e) => {
-      let value = e.target.value.replace(/\D/g, "");
-      e.target.value = new Intl.NumberFormat("id-ID").format(value);
+// =====================================================
+// 💰 FORMAT INPUT SALDO
+// =====================================================
+const inputAwal = document.getElementById("saldoAwalInput");
+if (inputAwal) {
+  inputAwal.addEventListener("input", (e) => {
+    let value = e.target.value.replace(/\D/g, "");
+    e.target.value = new Intl.NumberFormat("id-ID").format(value);
+  });
+}
+
+const inputAkhir = document.getElementById("saldoAkhirInput");
+if (inputAkhir) {
+  inputAkhir.addEventListener("input", (e) => {
+    let value = e.target.value.replace(/\D/g, "");
+    e.target.value = new Intl.NumberFormat("id-ID").format(value);
+  });
+}
+
+
+// =====================================================
+// 💾 SIMPAN SALDO KE FIREBASE
+// =====================================================
+const saveBtn = document.getElementById("saveSaldoBtn");
+const saveAkhirBtn = document.getElementById("saveSaldoAkhirBtn");
+
+async function saveSaldoToFirebase() {
+
+  const saldoAwal =
+    parseInt((inputAwal?.value || "0").replace(/\./g, "")) || 0;
+
+  const saldoAkhir =
+    parseInt((inputAkhir?.value || "0").replace(/\./g, "")) || 0;
+
+  try {
+    await setDoc(doc(db, "saldo", "utama"), {
+      saldoAwal,
+      saldoAkhir,
+      updatedAt: new Date()
     });
+
+    alert("Saldo berhasil disimpan 🚀");
+
+  } catch (err) {
+    console.error("Gagal simpan saldo:", err);
+  }
+}
+
+if (saveBtn) saveBtn.addEventListener("click", saveSaldoToFirebase);
+if (saveAkhirBtn) saveAkhirBtn.addEventListener("click", saveSaldoToFirebase);
+
+
+// =====================================================
+// 🔥 REALTIME SALDO (DASHBOARD)
+// =====================================================
+const saldoRef = doc(db, "saldo", "utama");
+
+onSnapshot(saldoRef, (snap) => {
+
+  if (!snap.exists()) return;
+
+  const data = snap.data();
+
+  const elAwal = document.getElementById("saldoAwal");
+  if (elAwal) {
+    elAwal.textContent =
+      new Intl.NumberFormat("id-ID").format(data.saldoAwal || 0);
   }
 
-  formatInput(inputAwal);
-  formatInput(inputAkhir);
+  const elAkhir = document.getElementById("saldoAkhir");
+  if (elAkhir) {
+    elAkhir.textContent =
+      new Intl.NumberFormat("id-ID").format(data.saldoAkhir || 0);
+  }
+});
 
 
-  // =====================================================
-  // 💾 SAVE KE FIREBASE
-  // =====================================================
-  const saveBtn = document.getElementById("saveSaldoBtn");
+// =====================================================
+// 💸 REALTIME PENGELUARAN (FIX UTAMA)
+// =====================================================
+function listenPengeluaran(db) {
 
-  saveBtn?.addEventListener("click", async () => {
+  const colRef = collection(db, "transaksi");
 
-    const saldoAwal = parseInt((inputAwal?.value || "0").replace(/\./g, "")) || 0;
-    const saldoAkhir = parseInt((inputAkhir?.value || "0").replace(/\./g, "")) || 0;
+  onSnapshot(colRef, (snapshot) => {
 
-    try {
+    let totalKeluar = 0;
 
-      await setDoc(doc(db, "saldo", "utama"), {
-        saldoAwal,
-        saldoAkhir,
-        updatedAt: new Date()
-      });
+    snapshot.forEach((doc) => {
+      const data = doc.data();
 
-      alert("✔ Saldo berhasil disimpan");
+      // 🔥 SESUAI FIREBASE KAMU
+      if (data.type === "keluar") {
+        totalKeluar += Number(data.nominal || 0);
+      }
+    });
 
-    } catch (err) {
-      console.error("❌ Error simpan saldo:", err);
+    const pengeluaranEl = document.getElementById("pengeluaranValue");
+
+    if (pengeluaranEl) {
+      pengeluaranEl.textContent =
+        totalKeluar.toLocaleString("id-ID");
     }
   });
+}
 
 
-  // =====================================================
-  // 🔥 REALTIME UPDATE (INI YANG KAMU KURANG)
-  // =====================================================
-  const saldoRef = doc(db, "saldo", "utama");
+// =====================================================
+// 🚀 START LISTENER
+// =====================================================
+listenPengeluaran(db);
 
-  onSnapshot(saldoRef, (snap) => {
 
-    if (!snap.exists()) {
-      console.warn("⚠ Data saldo belum ada");
-      return;
-    }
 
-    const data = snap.data();
 
-    // ambil element UI
-    const saldoAwalEl = document.getElementById("saldoAwalValue");
-    const saldoAkhirEl = document.getElementById("saldoAkhirValue");
 
-    console.log("🔄 REALTIME UPDATE:", data);
 
-    if (saldoAwalEl) {
-      saldoAwalEl.textContent = Number(data.saldoAwal || 0).toLocaleString("id-ID");
-    }
+document.addEventListener("DOMContentLoaded", () => {
 
-    if (saldoAkhirEl) {
-      saldoAkhirEl.textContent = Number(data.saldoAkhir || 0).toLocaleString("id-ID");
-    }
+  // =============================
+  // 💰 REALTIME TOTAL PEMASUKAN
+  // =============================
+  const pemasukanEl = document.getElementById("pemasukanValue");
 
+  if (!pemasukanEl) {
+    console.warn("pemasukanValue tidak ditemukan");
+    return;
+  }
+
+  onSnapshot(collection(db, "penjualan"), (snapshot) => {
+
+    let totalMasuk = 0;
+
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+
+      if (data.type === "masuk") {
+        totalMasuk += Number(data.total || 0);
+      }
+    });
+
+    pemasukanEl.textContent = totalMasuk.toLocaleString("id-ID");
   });
 
 });
