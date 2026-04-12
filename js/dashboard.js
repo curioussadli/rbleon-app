@@ -1,30 +1,18 @@
 // =====================================================
-// 🔐 AUTH GUARD FIX (ANTI FLICKER)
+// 🔐 LOGIN CHECK
 // =====================================================
-import { auth } from "./firebase.js";
-import { onAuthStateChanged } 
-from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+const group = localStorage.getItem("selectedGroup");
+const petugas = localStorage.getItem("selectedPetugas");
 
-let checked = false;
+if (!group || !petugas) {
+  window.location.href = "index.html";
+}
 
-onAuthStateChanged(auth, (user) => {
-  checked = true;
-
-  if (user) {
-    document.body.style.display = "block";
-  } else {
-    setTimeout(() => {
-      window.location.replace("index.html");
-    }, 300); // ⬅️ penting untuk HP
-  }
-});
-
-// safety
-setTimeout(() => {
-  if (!checked) {
-    console.log("Auth belum ready (mobile delay)");
-  }
-}, 2000);
+// tampilkan info user
+const petugasInfo = document.getElementById("petugasInfo");
+if (petugasInfo) {
+  petugasInfo.textContent = `${group} • ${petugas}`;
+}
 
 
 // =====================================================
