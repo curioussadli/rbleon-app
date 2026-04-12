@@ -12,17 +12,27 @@ import {
 
 const provider = new GoogleAuthProvider();
 
+// 🔥 PENTING: paksa pilih akun (hindari auto redirect aneh)
+provider.setCustomParameters({
+  prompt: "select_account"
+});
+
 export async function loginWithGoogle() {
-  const result = await signInWithPopup(auth, provider);
-  const user = result.user;
+  try {
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
 
-  // SIMPAN USER KE FIRESTORE
-  await setDoc(doc(db, "users", user.uid), {
-    name: user.displayName,
-    email: user.email,
-    photo: user.photoURL,
-    lastLogin: new Date()
-  }, { merge: true });
+    await setDoc(doc(db, "users", user.uid), {
+      name: user.displayName,
+      email: user.email,
+      photo: user.photoURL,
+      lastLogin: new Date()
+    }, { merge: true });
 
-  return user;
+    return user;
+
+  } catch (error) {
+    console.error("Google Login Error:", error);
+    throw error;
+  }
 }
