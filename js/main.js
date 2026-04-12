@@ -1,3 +1,6 @@
+// =============================
+// PWA INSTALL PROMPT HANDLER
+// =============================
 let deferredPrompt;
 
 window.addEventListener("beforeinstallprompt", (e) => {
@@ -6,8 +9,6 @@ window.addEventListener("beforeinstallprompt", (e) => {
 
   console.log("PWA bisa diinstall!");
 });
-
-
 
 // =========================
 // SAFE INIT (BIAR TIDAK ERROR DI HALAMAN LAIN)
