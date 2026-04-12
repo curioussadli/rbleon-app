@@ -5,31 +5,26 @@ import { auth } from "./firebase.js";
 import { onAuthStateChanged } 
 from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-// ❗ JANGAN LANGSUNG REDIRECT
-let loaded = false;
-
-document.body.style.display = "none";
+let checked = false;
 
 onAuthStateChanged(auth, (user) => {
-
-  loaded = true;
+  checked = true;
 
   if (user) {
-    console.log("LOGIN OK:", user.email);
     document.body.style.display = "block";
   } else {
-    console.log("NO USER → redirect");
-    window.location.replace("index.html");
+    setTimeout(() => {
+      window.location.replace("index.html");
+    }, 300); // ⬅️ penting untuk HP
   }
-
 });
 
-// 🔥 DEBUG FORCE (lihat apakah auth pernah jalan)
+// safety
 setTimeout(() => {
-  if (!loaded) {
-    console.log("❗ AUTH TIDAK PERNAH READY");
+  if (!checked) {
+    console.log("Auth belum ready (mobile delay)");
   }
-}, 3000);
+}, 2000);
 
 
 // =====================================================
