@@ -1,16 +1,26 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+
+// =====================================================
+// 📦 FIRESTORE MODULE (FULL TOOLS)
+// =====================================================
 import {
   getFirestore,
   collection,
+  doc,
+  getDocs,
   onSnapshot,
-  addDoc
+  addDoc,
+  setDoc,
+  updateDoc,
+  deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// =============================
-// CONFIG FIREBASE
-// =============================
+
+// =====================================================
+// ⚙️ CONFIG FIREBASE
+// =====================================================
 const firebaseConfig = {
-  apiKey: "AIzaSyCE7nPHUvlYTlbX654Iq7pA62eNQeDmKxY",
+  apiKey: "AIzaSyCE7nPHUvlYTlbX654Iq7pA62eNQeDmXKxY",
   authDomain: "rblite-app.firebaseapp.com",
   projectId: "rblite-app",
   storageBucket: "rblite-app.firebasestorage.app",
@@ -19,15 +29,35 @@ const firebaseConfig = {
   measurementId: "G-WQ950MP9E9"
 };
 
-// =============================
-// INIT FIREBASE
-// =============================
+
+// =====================================================
+// 🚀 INIT FIREBASE APP
+// =====================================================
 const app = initializeApp(firebaseConfig);
+
+// koneksi database Firestore
 const db = getFirestore(app);
 
-console.log("🔥 Firebase connect OK");
+console.log("🔥 Firebase CONNECTED OK");
 
-// =============================
-// EXPORT YANG DIPAKAI APP
-// =============================
-export { db, collection, onSnapshot, addDoc };
+
+// =====================================================
+// 📤 EXPORT GLOBAL UNTUK SEMUA MODUL
+// =====================================================
+export {
+  db,
+
+  // collection tools
+  collection,
+  doc,
+
+  // read
+  getDocs,
+  onSnapshot,
+
+  // write
+  addDoc,
+  setDoc,
+  updateDoc,
+  deleteDoc
+};
