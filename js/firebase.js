@@ -1,6 +1,10 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {
+  getAuth,
+  setPersistence,
+  browserLocalPersistence
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 // =============================
 // CONFIG
@@ -16,11 +20,23 @@ const firebaseConfig = {
 };
 
 // =============================
-// INIT
+// INIT APP
 // =============================
 const app = initializeApp(firebaseConfig);
 
+// =============================
+// SERVICES
+// =============================
 export const db = getFirestore(app);
 export const auth = getAuth(app);
+
+// 🔥 INI FIX UTAMA (ANTI LOGOUT + ANTI LOOP)
+setPersistence(auth, browserLocalPersistence)
+  .then(() => {
+    console.log("🔥 Auth persistence aktif (LOCAL)");
+  })
+  .catch((error) => {
+    console.error("Auth persistence error:", error);
+  });
 
 console.log("🔥 Firebase connect OK");
