@@ -15,7 +15,11 @@ window.addEventListener("beforeinstallprompt", (e) => {
 // =============================
 import { loginWithGoogle } from "./auth.js";
 
-document.getElementById("googleLogin").addEventListener("click", async () => {
-  await loginWithGoogle();
-  window.location.href = "dashboard.html";
-});
+document.getElementById("googleLogin").onclick = async () => {
+  try {
+    await loginWithGoogle();
+    window.location.href = "dashboard.html";
+  } catch (e) {
+    console.log(e);
+  }
+};
