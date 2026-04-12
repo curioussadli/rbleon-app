@@ -1,4 +1,3 @@
-
 // =====================================================
 // 🔥 FIREBASE INIT (DARI firebase.js)
 // =====================================================
@@ -7,11 +6,6 @@ import { doc, setDoc, onSnapshot, collection }
 from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 
-
-// =====================================================
-// 🚀 WAIT DOM READY (WAJIB SATU SAJA)
-// =====================================================
-document.addEventListener("DOMContentLoaded", () => {
 
 
 // =====================================================
@@ -50,6 +44,7 @@ function setActiveTab(type) {
 // =====================================================
 // 🎯 EVENT TAB CLICK
 // =====================================================
+document.addEventListener("DOMContentLoaded", () => {
 
   const saldoBtn = document.getElementById("saldoBtn");
   const inputBtn = document.getElementById("inputBtn");
