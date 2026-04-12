@@ -1,25 +1,29 @@
 // =====================================================
-// 🔐 AUTH GUARD (WAJIB PALING ATAS)
+// 🔐 AUTH GUARD FIX (ANTI FLICKER)
 // =====================================================
-import { auth, db } from "./firebase.js";
+import { auth } from "./firebase.js";
 import { onAuthStateChanged } 
 from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-import {
-  doc,
-  setDoc,
-  onSnapshot,
-  collection
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+// ⛔ TUNGGU STATUS AUTH STABIL
+let authChecked = false;
 
-// ⛔ STOP ACCESS JIKA BELUM LOGIN
 onAuthStateChanged(auth, (user) => {
-  if (!user) {
-    window.location.href = "index.html";
-  } else {
+  authChecked = true;
+
+  if (user) {
     console.log("Login OK:", user.email);
+  } else {
+    window.location.replace("index.html");
   }
 });
+
+// 🧠 SAFETY NET (kalau auth lambat)
+setTimeout(() => {
+  if (!authChecked) {
+    console.warn("Auth masih loading...");
+  }
+}, 2000);
 
 
 // =====================================================
