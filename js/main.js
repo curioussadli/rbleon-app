@@ -34,18 +34,12 @@ if ("serviceWorker" in navigator) {
     });
 }
 
-
-// =====================================================
-// 🧠 SAFE INIT (BIAR TIDAK ERROR DI HALAMAN YANG TIDAK ADA ELEMENT)
-// =====================================================
+// =========================
+// SAFE INIT (BIAR TIDAK ERROR DI HALAMAN LAIN)
+// =========================
 const groupBtn = document.getElementById("groupBtn");
 
-// kalau tombol group ada → berarti halaman login aktif
 if (groupBtn) {
-
-  // =============================
-  // 🎛️ ELEMENT UI LOGIN
-  // =============================
   const petugasBtn = document.getElementById("petugasBtn");
   const masukBtn = document.getElementById("masukBtn");
 
@@ -55,59 +49,46 @@ if (groupBtn) {
   const groupOptions = document.getElementById("groupOptions");
   const petugasOptions = document.getElementById("petugasOptions");
 
-
-  // =============================
-  // 📊 DATA GROUP & PETUGAS
-  // =============================
+  // =========================
+  // DATA
+  // =========================
   const grupData = {
-    "Gemah Raya": ["Rama"] // bisa tambah: "Budi", "Andi", dll
+    "Gemah Raya": ["Rama", "-", "-"],
+    "-": ["-", "-", "-"],
   };
 
-
-  // =============================
-  // 📌 STATE USER
-  // =============================
   let selectedGroup = "";
   let selectedPetugas = "";
 
-
-  // =====================================================
-  // 🧩 RENDER LIST GROUP
-  // =====================================================
+  // =========================
+  // RENDER GROUP
+  // =========================
   function renderGroups() {
-
-    groupOptions.innerHTML = ""; // reset isi dropdown
+    groupOptions.innerHTML = "";
 
     Object.keys(grupData).forEach((group) => {
-
       const item = document.createElement("div");
       item.classList.add("dropdown-item");
       item.textContent = group;
 
-      // klik group
       item.addEventListener("click", () => {
-
-        selectedGroup = group; // simpan group
-        selectedPetugas = "";   // reset petugas
+        selectedGroup = group;
+        selectedPetugas = "";
 
         groupText.textContent = group;
         petugasText.textContent = "Pilih Crew";
 
-        // aktifkan style tombol
         groupBtn.classList.add("active-selected");
         petugasBtn.classList.add("active-selected");
 
-        petugasBtn.disabled = false; // enable tombol petugas
+        petugasBtn.disabled = false;
 
-        // sembunyikan dropdown
         groupOptions.classList.add("hidden");
         petugasOptions.classList.add("hidden");
 
-        // disable tombol login dulu
         masukBtn.disabled = true;
         masukBtn.classList.remove("ready");
 
-        // render petugas sesuai group
         renderPetugas(group);
       });
 
@@ -115,29 +96,22 @@ if (groupBtn) {
     });
   }
 
-
-  // =====================================================
-  // 🧩 RENDER LIST PETUGAS
-  // =====================================================
+  // =========================
+  // RENDER PETUGAS
+  // =========================
   function renderPetugas(group) {
-
-    petugasOptions.innerHTML = ""; // reset
+    petugasOptions.innerHTML = "";
 
     grupData[group].forEach((nama) => {
-
       const item = document.createElement("div");
       item.classList.add("dropdown-item");
       item.textContent = nama;
 
-      // klik petugas
       item.addEventListener("click", () => {
-
         selectedPetugas = nama;
-
         petugasText.textContent = nama;
         petugasOptions.classList.add("hidden");
 
-        // jika sudah lengkap → enable login
         if (selectedGroup && selectedPetugas) {
           masukBtn.disabled = false;
           masukBtn.classList.add("ready");
@@ -148,62 +122,39 @@ if (groupBtn) {
     });
   }
 
-
-  // =====================================================
-  // 🖱️ EVENT OPEN DROPDOWN GROUP
-  // =====================================================
+  // =========================
+  // EVENT
+  // =========================
   groupBtn.addEventListener("click", () => {
-    groupOptions.classList.toggle("hidden"); // toggle buka/tutup
-    petugasOptions.classList.add("hidden");  // tutup yang lain
+    groupOptions.classList.toggle("hidden");
+    petugasOptions.classList.add("hidden");
   });
 
-
-  // =====================================================
-  // 🖱️ EVENT OPEN DROPDOWN PETUGAS
-  // =====================================================
   petugasBtn.addEventListener("click", () => {
-
-    if (!selectedGroup) {
-      alert("Silakan pilih group dulu");
-      return;
-    }
-
+    if (!selectedGroup) return;
     petugasOptions.classList.toggle("hidden");
     groupOptions.classList.add("hidden");
   });
 
-
-  // =====================================================
-  // 🚀 LOGIN & SIMPAN LOCALSTORAGE
-  // =====================================================
   masukBtn.addEventListener("click", () => {
-
     if (!selectedGroup || !selectedPetugas) return;
 
-    // simpan session login
     localStorage.setItem("selectedGroup", selectedGroup);
     localStorage.setItem("selectedPetugas", selectedPetugas);
-    localStorage.setItem("login", "true");
+    localStorage.setItem("login", "true"); // 🔥 penting
 
-    // pindah ke dashboard
     window.location.href = "dashboard.html";
   });
 
-
-  // =====================================================
-  // ❌ CLOSE DROPDOWN JIKA CLICK DI LUAR
-  // =====================================================
   document.addEventListener("click", (e) => {
-
     if (!e.target.closest(".field-wrap")) {
       groupOptions.classList.add("hidden");
       petugasOptions.classList.add("hidden");
     }
   });
 
-
-  // =====================================================
-  // ▶️ INIT FIRST LOAD
-  // =====================================================
+  // =========================
+  // INIT
+  // =========================
   renderGroups();
 }
