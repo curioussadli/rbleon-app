@@ -134,3 +134,24 @@ if (groupBtn) {
   // =========================
   renderGroups();
 }
+
+
+
+
+
+
+
+
+
+document.getElementById("googleLogin").addEventListener("click", async () => {
+  try {
+    const result = await loginWithGoogle();
+    console.log(result.user);
+
+    localStorage.setItem("login", "true");
+
+    window.location.href = "dashboard.html";
+  } catch (error) {
+    console.error(error);
+  }
+});
