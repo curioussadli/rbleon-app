@@ -23,18 +23,24 @@
     <section class="login-screen">
       <div class="login-box">
 
-        <!-- 🔵 GOOGLE LOGIN -->
-        <button id="googleLogin" class="btn google">
-          Login dengan Google
-        </button>
+        <!-- Grup -->
+        <div class="field-wrap">
+          <button id="groupBtn" class="field-btn" type="button">
+            <span id="groupText">Resto</span>
+          </button>
+          <div id="groupOptions" class="dropdown hidden"></div>
+        </div>
 
-        <!-- ⚪ DAFTAR (DUMMY) -->
-        <button id="daftarBtn" class="btn secondary">
-          Daftar
-        </button>
+        <!-- Petugas -->
+        <div class="field-wrap">
+          <button id="petugasBtn" class="field-btn" type="button" disabled>
+            <span id="petugasText">Crew</span>
+          </button>
+          <div id="petugasOptions" class="dropdown hidden"></div>
+        </div>
 
-        <!-- 🟢 MASUK (BYPASS) -->
-        <button id="masukBtn" class="btn primary">
+        <!-- Tombol Masuk -->
+        <button id="masukBtn" class="masuk-btn" disabled>
           Masuk
         </button>
 
