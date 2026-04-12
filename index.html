@@ -4,49 +4,24 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Masuk Aplikasi</title>
+  <title>Loading...</title>
 
-  <!-- FONT (opsional) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- OPTIONAL: meta redirect cepat -->
+  <meta http-equiv="refresh" content="0; url=dashboard.html">
 
-  <!-- CSS (boleh pakai login.css atau main.css) -->
-  <link rel="stylesheet" href="css/login.css">
 </head>
 
 <body>
 
   <!-- =====================================================
-       🟡 SIMPLE LANDING PAGE
-       HANYA 1 TOMBOL MASUK
+       🚀 AUTO REDIRECT KE DASHBOARD
+       SEPERTI APP SAAT BUKA LINK
   ===================================================== -->
-  <main class="app">
 
-    <section class="login-screen">
-
-      <div class="login-box" style="text-align:center;">
-
-        <!-- TEXT (opsional) -->
-        <h2>Selamat Datang</h2>
-        <p>Tekan tombol untuk masuk ke aplikasi</p>
-
-        <!-- =====================================================
-             🔥 TOMBOL MASUK (LANGSUNG KE DASHBOARD)
-        ===================================================== -->
-        <button
-          class="masuk-btn"
-          onclick="window.location.href='dashboard.html'">
-
-          Masuk
-
-        </button>
-
-      </div>
-
-    </section>
-
-  </main>
+  <script>
+    // fallback redirect (lebih aman dari meta refresh)
+    window.location.replace("dashboard.html");
+  </script>
 
 </body>
 </html>
