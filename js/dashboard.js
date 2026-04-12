@@ -5,21 +5,15 @@ import { auth } from "./firebase.js";
 import { onAuthStateChanged } 
 from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-// 🔥 block UI dulu (anti flicker)
 document.body.style.display = "none";
 
 onAuthStateChanged(auth, (user) => {
-
-  // ⛔ JANGAN CEK NULL TERLALU CEPAT
   if (user) {
-    console.log("Login OK:", user.email);
-
+    console.log("LOGIN OK:", user.email);
     document.body.style.display = "block";
-
   } else {
     window.location.replace("index.html");
   }
-
 });
 
 
