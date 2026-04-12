@@ -1,25 +1,5 @@
 
 
-
-
-
-// =====================================================
-// 🔐 LOGIN CHECK
-// =====================================================
-const group = localStorage.getItem("selectedGroup");
-const petugas = localStorage.getItem("selectedPetugas");
-
-if (!group || !petugas) {
-  window.location.href = "index.html";
-}
-
-// tampilkan info user
-const petugasInfo = document.getElementById("petugasInfo");
-if (petugasInfo) {
-  petugasInfo.textContent = `${group} • ${petugas}`;
-}
-
-
 // =====================================================
 // 🎛️ TAB ELEMENT
 // =====================================================
