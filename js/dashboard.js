@@ -1,191 +1,185 @@
 // =====================================================
-// 🔐 LOGIN CHECK (ambil data dari localStorage)
+// 📊 DASHBOARD SYSTEM (NO LOGIN VERSION)
+// Semua user langsung masuk tanpa auth/login
 // =====================================================
-const group = localStorage.getItem("selectedGroup");
-const petugas = localStorage.getItem("selectedPetugas");
 
-// kalau belum login → paksa balik ke index
-if (!group || !petugas) {
-  window.location.href = "index.html";
+
+// =====================================================
+// 🎛️ TAB SYSTEM (SALDO / INPUT)
+// =====================================================
+
+// tombol tab
+const saldoBtn = document.getElementById("saldoBtn");   // tombol tab saldo
+const inputBtn = document.getElementById("inputBtn");   // tombol tab input
+
+// konten tab
+const saldoContent = document.getElementById("saldoContent"); // section saldo
+const inputContent = document.getElementById("inputContent"); // section input
+
+
+// =====================================================
+// 🔁 FUNGSI GANTI TAB
+// =====================================================
+function setActiveTab(type) {
+
+  // safety check kalau elemen tidak ditemukan
+  if (!saldoBtn || !inputBtn || !saldoContent || !inputContent) return;
+
+  // reset status active di tombol
+  saldoBtn.classList.remove("active");
+  inputBtn.classList.remove("active");
+
+  // sembunyikan semua tab dulu
+  saldoContent.style.display = "none";
+  inputContent.style.display = "none";
+
+  // kalau pilih TAB SALDO
+  if (type === "saldo") {
+    saldoBtn.classList.add("active");        // aktifkan tombol
+    saldoContent.style.display = "block";    // tampilkan saldo
+  }
+
+  // kalau pilih TAB INPUT
+  else {
+    inputBtn.classList.add("active");        // aktifkan tombol
+    inputContent.style.display = "block";    // tampilkan input
+  }
 }
 
 
 // =====================================================
-// 👤 TAMPILKAN INFO USER DI HEADER
+// 🖱️ EVENT CLICK TAB
 // =====================================================
-const petugasInfo = document.getElementById("petugasInfo");
+saldoBtn?.addEventListener("click", () => setActiveTab("saldo")); // klik saldo
+inputBtn?.addEventListener("click", () => setActiveTab("input")); // klik input
 
-if (petugasInfo) {
-  // gabungkan group + nama petugas
-  petugasInfo.textContent = `${group} • ${petugas}`;
+// default saat halaman dibuka
+setActiveTab("saldo");
+
+
+// =====================================================
+// 💰 FORMAT INPUT RUPIAH OTOMATIS
+// =====================================================
+function formatInput(el) {
+
+  if (!el) return; // kalau input tidak ada stop
+
+  el.addEventListener("input", (e) => {
+
+    // hapus semua selain angka
+    let value = e.target.value.replace(/\D/g, "");
+
+    // format jadi ribuan Indonesia (1.000.000)
+    e.target.value = new Intl.NumberFormat("id-ID").format(value);
+  });
+}
+
+// aktifkan format ke input saldo
+formatInput(document.getElementById("saldoAwalInput"));
+formatInput(document.getElementById("saldoAkhirInput"));
+
+
+// =====================================================
+// 💾 SIMPAN SALDO KE FIREBASE
+// =====================================================
+
+// ambil input DOM
+const inputAwal = document.getElementById("saldoAwalInput");   // input saldo awal
+const inputAkhir = document.getElementById("saldoAkhirInput"); // input saldo akhir
+
+// fungsi simpan ke firestore
+async function saveSaldo() {
+
+  // convert format "1.000" → 1000 (angka asli)
+  const saldoAwal = parseInt((inputAwal?.value || "0").replace(/\./g, "")) || 0;
+  const saldoAkhir = parseInt((inputAkhir?.value || "0").replace(/\./g, "")) || 0;
+
+  try {
+
+    // simpan ke collection "saldo" doc "utama"
+    await setDoc(doc(db, "saldo", "utama"), {
+      saldoAwal,              // data saldo awal
+      saldoAkhir,             // data saldo akhir
+      updatedAt: new Date()   // timestamp update
+    });
+
+    alert("Saldo berhasil disimpan 🚀");
+
+  } catch (err) {
+    console.error("Gagal simpan saldo:", err); // log error
+  }
 }
 
 
+// tombol simpan saldo awal
+document.getElementById("saveSaldoBtn")
+  ?.addEventListener("click", saveSaldo);
+
+// tombol simpan saldo akhir
+document.getElementById("saveSaldoAkhirBtn")
+  ?.addEventListener("click", saveSaldo);
+
+
 // =====================================================
-// ⚠️ PASTIKAN DOM SUDAH SIAP (INI PENTING BIAR TAB TIDAK ERROR)
+// 🔥 REALTIME LISTENER SALDO (FIREBASE)
 // =====================================================
-document.addEventListener("DOMContentLoaded", () => {
+onSnapshot(doc(db, "saldo", "utama"), (snap) => {
 
-  // =====================================================
-  // 🎛️ TAB ELEMENT (ambil tombol & isi tab)
-  // =====================================================
-  const saldoBtn = document.getElementById("saldoBtn");
-  const inputBtn = document.getElementById("inputBtn");
+  if (!snap.exists()) return; // kalau data kosong stop
 
-  const saldoContent = document.getElementById("saldoContent");
-  const inputContent = document.getElementById("inputContent");
+  const data = snap.data(); // ambil data firestore
+
+  // tampilkan saldo awal
+  document.getElementById("saldoAwal")?.textContent =
+    new Intl.NumberFormat("id-ID").format(data.saldoAwal || 0);
+
+  // tampilkan saldo akhir
+  document.getElementById("saldoAkhir")?.textContent =
+    new Intl.NumberFormat("id-ID").format(data.saldoAkhir || 0);
+});
 
 
-  // =====================================================
-  // 🔁 FUNCTION UNTUK GANTI TAB
-  // =====================================================
-  function setActiveTab(type) {
+// =====================================================
+// 💸 REALTIME PENGELUARAN (COLLECTION transaksi)
+// =====================================================
+onSnapshot(collection(db, "transaksi"), (snapshot) => {
 
-    // kalau elemen belum ada → stop biar tidak error
-    if (!saldoBtn || !inputBtn || !saldoContent || !inputContent) return;
+  let total = 0; // penampung total pengeluaran
 
-    // reset semua tombol jadi non-active
-    saldoBtn.classList.remove("active");
-    inputBtn.classList.remove("active");
+  snapshot.forEach((doc) => {
 
-    // sembunyikan semua isi tab
-    saldoContent.style.display = "none";
-    inputContent.style.display = "none";
+    const data = doc.data();
 
-    // jika tab SALDO dipilih
-    if (type === "saldo") {
-      saldoBtn.classList.add("active");      // aktifkan tombol
-      saldoContent.style.display = "block";  // tampilkan isi saldo
+    // hanya hitung transaksi keluar
+    if (data.type === "keluar") {
+      total += Number(data.nominal || 0);
     }
-
-    // jika tab INPUT dipilih
-    else {
-      inputBtn.classList.add("active");       // aktifkan tombol
-      inputContent.style.display = "block";   // tampilkan form input
-    }
-  }
-
-
-  // =====================================================
-  // 🖱️ EVENT CLICK TAB
-  // =====================================================
-  saldoBtn?.addEventListener("click", () => setActiveTab("saldo"));
-  inputBtn?.addEventListener("click", () => setActiveTab("input"));
-
-  // default tab saat halaman dibuka
-  setActiveTab("saldo");
-
-
-  // =====================================================
-  // 💰 FORMAT INPUT RUPIAH (otomatis pakai titik)
-  // =====================================================
-  function formatInput(el) {
-    if (!el) return;
-
-    el.addEventListener("input", (e) => {
-
-      // hapus semua selain angka
-      let value = e.target.value.replace(/\D/g, "");
-
-      // format ribuan Indonesia
-      e.target.value = new Intl.NumberFormat("id-ID").format(value);
-    });
-  }
-
-  // aktifkan format ke input saldo
-  formatInput(document.getElementById("saldoAwalInput"));
-  formatInput(document.getElementById("saldoAkhirInput"));
-
-
-  // =====================================================
-  // 💾 SIMPAN SALDO KE FIREBASE
-  // =====================================================
-  const inputAwal = document.getElementById("saldoAwalInput");
-  const inputAkhir = document.getElementById("saldoAkhirInput");
-
-  async function saveSaldo() {
-
-    // ubah format "1.000" → 1000 (angka asli)
-    const saldoAwal = parseInt((inputAwal?.value || "0").replace(/\./g, "")) || 0;
-    const saldoAkhir = parseInt((inputAkhir?.value || "0").replace(/\./g, "")) || 0;
-
-    try {
-      await setDoc(doc(db, "saldo", "utama"), {
-        saldoAwal,
-        saldoAkhir,
-        updatedAt: new Date()
-      });
-
-      alert("Saldo berhasil disimpan 🚀");
-
-    } catch (err) {
-      console.error("Gagal simpan saldo:", err);
-    }
-  }
-
-  // tombol simpan saldo awal & akhir
-  document.getElementById("saveSaldoBtn")?.addEventListener("click", saveSaldo);
-  document.getElementById("saveSaldoAkhirBtn")?.addEventListener("click", saveSaldo);
-
-
-  // =====================================================
-  // 🔥 REALTIME SALDO (FIREBASE LISTENER)
-  // =====================================================
-  onSnapshot(doc(db, "saldo", "utama"), (snap) => {
-
-    if (!snap.exists()) return;
-
-    const data = snap.data();
-
-    // tampilkan saldo awal
-    document.getElementById("saldoAwal")?.textContent =
-      new Intl.NumberFormat("id-ID").format(data.saldoAwal || 0);
-
-    // tampilkan saldo akhir
-    document.getElementById("saldoAkhir")?.textContent =
-      new Intl.NumberFormat("id-ID").format(data.saldoAkhir || 0);
   });
 
+  // tampilkan ke UI
+  document.getElementById("pengeluaranValue")?.textContent =
+    total.toLocaleString("id-ID");
+});
 
-  // =====================================================
-  // 💸 REALTIME PENGELUARAN (collection transaksi)
-  // =====================================================
-  onSnapshot(collection(db, "transaksi"), (snapshot) => {
 
-    let total = 0;
+// =====================================================
+// 💰 REALTIME PEMASUKAN (COLLECTION penjualan)
+// =====================================================
+onSnapshot(collection(db, "penjualan"), (snapshot) => {
 
-    snapshot.forEach((doc) => {
-      const data = doc.data();
+  let total = 0; // penampung pemasukan
 
-      // hanya hitung transaksi keluar
-      if (data.type === "keluar") {
-        total += Number(data.nominal || 0);
-      }
-    });
+  snapshot.forEach((doc) => {
 
-    document.getElementById("pengeluaranValue")?.textContent =
-      total.toLocaleString("id-ID");
+    const data = doc.data();
+
+    // hanya hitung yang masuk
+    if (data.type === "masuk") {
+      total += Number(data.total || 0);
+    }
   });
 
-
-  // =====================================================
-  // 💰 REALTIME PEMASUKAN (collection penjualan)
-  // =====================================================
-  onSnapshot(collection(db, "penjualan"), (snapshot) => {
-
-    let total = 0;
-
-    snapshot.forEach((doc) => {
-      const data = doc.data();
-
-      // hanya hitung yang masuk
-      if (data.type === "masuk") {
-        total += Number(data.total || 0);
-      }
-    });
-
-    document.getElementById("pemasukanValue")?.textContent =
-      total.toLocaleString("id-ID");
-  });
-
+  // tampilkan ke UI
+  document.getElementById("pemasukanValue")?.textContent =
+    total.toLocaleString("id-ID");
 });
