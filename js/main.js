@@ -18,7 +18,12 @@ import { loginWithGoogle } from "./auth.js";
 document.getElementById("googleLogin").onclick = async () => {
   try {
     await loginWithGoogle();
-    window.location.href = "dashboard.html";
+
+    // kasih delay kecil supaya session ke-save
+    setTimeout(() => {
+      window.location.href = "dashboard.html";
+    }, 300);
+
   } catch (e) {
     console.log(e);
   }
