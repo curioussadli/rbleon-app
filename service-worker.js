@@ -1,46 +1,89 @@
 const CACHE_NAME = "rbleon-v3";
 
+// =====================================================
+// 📦 FILE CACHE (RELATIVE PATH - LEBIH AMAN)
+// =====================================================
 const FILES_TO_CACHE = [
-  "/rbleon-app/",
-  "/rbleon-app/index.html",
-  "/rbleon-app/manifest.json",
-  "/rbleon-app/css/main.css",
-  "/rbleon-app/js/main.js",
-  "/rbleon-app/js/dashboard.js",
-  "/rbleon-app/assets/icons/icon-192.png"
+  "./",
+  "./index.html",
+  "./manifest.json",
+  "./css/main.css",
+  "./js/main.js",
+  "./js/dashboard.js",
+  "./assets/icons/icon-192.png"
 ];
 
-// INSTALL
+
+// =====================================================
+// 📥 INSTALL EVENT
+// =====================================================
 self.addEventListener("install", (event) => {
-  self.skipWaiting(); // 🔥 langsung aktif
+
+  self.skipWaiting(); // langsung aktif
+
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(FILES_TO_CACHE))
+    caches.open(CACHE_NAME)
+      .then((cache) => {
+
+        // pakai addAll tapi dibungkus biar tidak gagal total
+        return Promise.allSettled(
+          FILES_TO_CACHE.map((file) => cache.add(file))
+        );
+      })
   );
 });
 
-// ACTIVATE (hapus cache lama)
+
+// =====================================================
+// ♻️ ACTIVATE EVENT (CLEAN OLD CACHE)
+// =====================================================
 self.addEventListener("activate", (event) => {
+
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(
-        keys.map((key) => key !== CACHE_NAME && caches.delete(key))
-      )
-    )
+    caches.keys().then((keys) => {
+
+      return Promise.all(
+        keys.map((key) => {
+
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+
+        })
+      );
+
+    })
   );
 
   self.clients.claim();
 });
 
-// FETCH (network first untuk HTML)
-self.addEventListener("fetch", (event) => {
-  const url = event.request.url;
 
-  if (url.includes(".html") || url.endsWith("/")) {
-    event.respondWith(fetch(event.request));
-    return;
-  }
+// =====================================================
+// 🌐 FETCH STRATEGY (NETWORK FIRST + CACHE FALLBACK)
+// =====================================================
+self.addEventListener("fetch", (event) => {
+
+  const req = event.request;
 
   event.respondWith(
-    caches.match(event.request).then((res) => res || fetch(event.request))
+    fetch(req)
+      .then((res) => {
+
+        // simpan ke cache kalau berhasil
+        const resClone = res.clone();
+
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(req, resClone);
+        });
+
+        return res;
+      })
+      .catch(() => {
+
+        // fallback ke cache kalau offline
+        return caches.match(req);
+
+      })
   );
 });
