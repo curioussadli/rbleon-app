@@ -5,25 +5,31 @@ import { auth } from "./firebase.js";
 import { onAuthStateChanged } 
 from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-let ready = false;
+// ❗ JANGAN LANGSUNG REDIRECT
+let loaded = false;
 
-// ❗ JANGAN REDIRECT SEBELUM READY
+document.body.style.display = "none";
+
 onAuthStateChanged(auth, (user) => {
-  ready = true;
+
+  loaded = true;
 
   if (user) {
     console.log("LOGIN OK:", user.email);
+    document.body.style.display = "block";
   } else {
+    console.log("NO USER → redirect");
     window.location.replace("index.html");
   }
+
 });
 
-// safety delay
+// 🔥 DEBUG FORCE (lihat apakah auth pernah jalan)
 setTimeout(() => {
-  if (!ready) {
-    console.log("Auth loading...");
+  if (!loaded) {
+    console.log("❗ AUTH TIDAK PERNAH READY");
   }
-}, 1500);
+}, 3000);
 
 
 // =====================================================
