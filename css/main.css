@@ -71,3 +71,30 @@ body {
     background: var(--bg);
   }
 }
+
+
+
+
+/* 🔥 biar tidak flicker saat login */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  transition: opacity 0.2s ease;
+}
+
+/* loading state saat login */
+body.loading {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* tombol login lebih smooth */
+button {
+  transition: all 0.2s ease;
+}
+
+/* disable button saat loading */
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
