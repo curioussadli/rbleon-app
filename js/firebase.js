@@ -31,3 +31,15 @@ console.log("🔥 Firebase connect OK");
 // EXPORT YANG DIPAKAI APP
 // =============================
 export { db, collection, onSnapshot, addDoc };
+
+
+import { getAuth, GoogleAuthProvider, signInWithPopup } 
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const auth = getAuth();
+const provider = new GoogleAuthProvider();
+
+export function loginWithGoogle() {
+  return signInWithPopup(auth, provider);
+}
+
