@@ -2,17 +2,13 @@
 // 🔐 AUTH GUARD FIX (ANTI FLICKER)
 // =====================================================
 import { auth } from "./firebase.js";
-import { onAuthStateChanged } 
-from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-document.body.style.display = "none";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 onAuthStateChanged(auth, (user) => {
-  if (user) {
-    console.log("LOGIN OK:", user.email);
-    document.body.style.display = "block";
-  } else {
+  if (!user) {
     window.location.replace("index.html");
+  } else {
+    console.log("LOGIN OK:", user.email);
   }
 });
 
