@@ -1,60 +1,45 @@
 // =====================================================
-// 📊 DASHBOARD SYSTEM (NO LOGIN VERSION)
-// Semua user langsung masuk tanpa auth/login
+// 🎛️ TAB SYSTEM FIX (SALDO / INPUT)
 // =====================================================
 
+document.addEventListener("DOMContentLoaded", () => {
 
-// =====================================================
-// 🎛️ TAB SYSTEM (SALDO / INPUT)
-// =====================================================
+  const saldoBtn = document.getElementById("saldoBtn");
+  const inputBtn = document.getElementById("inputBtn");
 
-// tombol tab
-const saldoBtn = document.getElementById("saldoBtn");   // tombol tab saldo
-const inputBtn = document.getElementById("inputBtn");   // tombol tab input
+  const saldoContent = document.getElementById("saldoContent");
+  const inputContent = document.getElementById("inputContent");
 
-// konten tab
-const saldoContent = document.getElementById("saldoContent"); // section saldo
-const inputContent = document.getElementById("inputContent"); // section input
+  function setActiveTab(type) {
 
+    if (!saldoBtn || !inputBtn || !saldoContent || !inputContent) return;
 
-// =====================================================
-// 🔁 FUNGSI GANTI TAB
-// =====================================================
-function setActiveTab(type) {
+    // reset tombol
+    saldoBtn.classList.remove("active");
+    inputBtn.classList.remove("active");
 
-  // safety check kalau elemen tidak ditemukan
-  if (!saldoBtn || !inputBtn || !saldoContent || !inputContent) return;
+    // sembunyikan semua tab
+    saldoContent.style.display = "none";
+    inputContent.style.display = "none";
 
-  // reset status active di tombol
-  saldoBtn.classList.remove("active");
-  inputBtn.classList.remove("active");
-
-  // sembunyikan semua tab dulu
-  saldoContent.style.display = "none";
-  inputContent.style.display = "none";
-
-  // kalau pilih TAB SALDO
-  if (type === "saldo") {
-    saldoBtn.classList.add("active");        // aktifkan tombol
-    saldoContent.style.display = "block";    // tampilkan saldo
+    // aktifkan sesuai pilihan
+    if (type === "saldo") {
+      saldoBtn.classList.add("active");
+      saldoContent.style.display = "block";
+    } else {
+      inputBtn.classList.add("active");
+      inputContent.style.display = "block";
+    }
   }
 
-  // kalau pilih TAB INPUT
-  else {
-    inputBtn.classList.add("active");        // aktifkan tombol
-    inputContent.style.display = "block";    // tampilkan input
-  }
-}
+  // klik event
+  saldoBtn.addEventListener("click", () => setActiveTab("saldo"));
+  inputBtn.addEventListener("click", () => setActiveTab("input"));
 
+  // default tab WAJIB jalan
+  setActiveTab("saldo");
+});
 
-// =====================================================
-// 🖱️ EVENT CLICK TAB
-// =====================================================
-saldoBtn?.addEventListener("click", () => setActiveTab("saldo")); // klik saldo
-inputBtn?.addEventListener("click", () => setActiveTab("input")); // klik input
-
-// default saat halaman dibuka
-setActiveTab("saldo");
 
 
 // =====================================================
