@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stok</title>
+
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/stok.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+
+<body>
+
+<!-- ========================= STOK MAIN ========================== -->
+<section class="stok-main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <h2 class="topbar-title">Stok</h2>
+  </div>
+
+  <!-- ========================= CARD STOK ========================== -->
+  <div class="stok-card" data-id="cokelat_glaze">
+
+    <!-- HEADER -->
+    <div class="stok-header" onclick="toggleCard(this)">
+      <div>
+        <h3 class="nama">Cokelat Glaze</h3>
+        <p class="gramasi">250 gr</p>
+        <small class="harga" data-harga="10000">Rp 10.000</small>
+      </div>
+
+      <div class="stok-info">
+        <strong class="stokTotal">0</strong>
+        <span class="satuan">Botol</span>
+        <small class="nominal">Rp 0</small>
+      </div>
+
+      <div class="stok-arrow">⌄</div>
+    </div>
+
+    <!-- BODY -->
+    <div class="stok-body">
+
+      <!-- STOK MASUK -->
+      <div class="stok-row">
+        <span>Stok Masuk</span>
+        <div class="qty-control">
+          <button onclick="changeValue(this,'stokMasuk',-1)">-</button>
+          <input type="number" class="stokMasuk" value="0">
+          <button onclick="changeValue(this,'stokMasuk',1)">+</button>
+        </div>
+      </div>
+
+      <!-- STOK KELUAR -->
+      <div class="stok-row">
+        <span>Stok Keluar</span>
+        <div class="qty-control">
+          <button onclick="changeValue(this,'stokKeluar',-1)">-</button>
+          <input type="number" class="stokKeluar" value="0">
+          <button onclick="changeValue(this,'stokKeluar',1)">+</button>
+        </div>
+      </div>
+
+      <!-- PERSEDIAAN -->
+      <div class="stok-summary">
+        <span>Persediaan</span>
+        <strong class="persediaan">0</strong>
+      </div>
+
+      <!-- STOK BAHAN UTUH -->
+      <div class="stok-row">
+        <span>Stok Bahan (Utuh)</span>
+        <div class="qty-control">
+          <button onclick="changeValue(this,'stokBahanUtuh',-1)">-</button>
+          <input type="number" class="stokBahanUtuh" value="0">
+          <button onclick="changeValue(this,'stokBahanUtuh',1)">+</button>
+        </div>
+      </div>
+
+      <!-- STOK BAHAN KOMA -->
+      <div class="stok-row">
+        <span>Stok Bahan (0.1 - 0.9)</span>
+        <div class="qty-control">
+          <button onclick="changeValue(this,'stokBahanKoma',-0.1)">-</button>
+          <input type="number" step="0.1" class="stokBahanKoma" value="0">
+          <button onclick="changeValue(this,'stokBahanKoma',0.1)">+</button>
+        </div>
+      </div>
+
+      <!-- STOK MINIMAL (INPUT SEKALIAN) -->
+      <div class="stok-row">
+        <span>Stok Minimal</span>
+        <div class="qty-control">
+          <input type="number" class="stokMinimal" value="0">
+        </div>
+      </div>
+
+      <!-- STOK REQUEST -->
+      <div class="stok-summary">
+        <span>Stok Request</span>
+        <strong class="stokRequest">0</strong>
+      </div>
+
+      <!-- SAVE -->
+      <div class="stok-save" onclick="saveStok(this)">
+        💾
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================= BUTTON KIRIM HARIAN ========================== -->
+  <div style="margin-top:20px; width:100%; max-width:420px;">
+    <button onclick="kirimStokHarian()"
+      style="width:100%; padding:12px; border:none; border-radius:10px; background:#333; color:#fff; font-weight:600;">
+      Kirim Data Stok Harian
+    </button>
+  </div>
+
+</section>
+
+<!-- =====================================================
+     📱 BOTTOM NAV
+===================================================== -->
+<nav class="bottom-nav">
+
+  <a href="dashboard.html" class="nav-item">
+    <div class="nav-icon">
+      <img src="assets/icons/icon-saldo.svg">
+    </div>
+    <span>Saldo</span>
+  </a>
+
+  <a href="stok.html" class="nav-item active">
+    <div class="nav-icon">
+      <img src="assets/icons/icon-stok.svg">
+    </div>
+    <span>Stok</span>
+  </a>
+
+  <a href="menu.html" class="nav-item">
+    <div class="nav-icon">
+      <img src="assets/icons/icon-menu.svg">
+    </div>
+    <span>Menu</span>
+  </a>
+
+  <a href="riwayat-pesanan.html" class="nav-item">
+    <div class="nav-icon">
+      <img src="assets/icons/icon-pesanan.svg">
+    </div>
+    <span>Riwayat</span>
+  </a>
+
+  <a href="transaksi.html" class="nav-item">
+    <div class="nav-icon">
+      <img src="assets/icons/icon-laporan.svg">
+    </div>
+    <span>Transaksi</span>
+  </a>
+
+</nav>
+
+<!-- ========================= JS ========================== -->
+<script type="module" src="stok.js"></script>
+
+</body>
+</html>
